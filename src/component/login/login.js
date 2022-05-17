@@ -29,6 +29,7 @@ const Login = () => {
 
   return (
     <div className='login-container'>
+      <h2 style={{textAlign: "center", marginBottom: "20px"}}>Login Page</h2>
       <Card className='login-card'>
         <Card.Body>
           {isUserFound && 
