@@ -1,29 +1,32 @@
 import { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import './notes.css';
-import { connect } from 'react-redux';
-import { addNotes } from '../../redux';
 import NotesList from './notesList';
 import AddNotesForm from './addNotesForm';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateNotes } from '../../redux/notes/notesSlice';
 
-const Notes = (props) => {
+const Notes = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isAddInputView, setAddInputView] = useState(false);
 
-  let notesData = [...props.notesList.notes];
+  let notesList = useSelector(state => state.notes);
+  let notesData = [...notesList.notes];
+  const dispatch = useDispatch();
+
   const handleNotesSubmit = (event) => {
     event.preventDefault();
     setTitle('');
     setDescription('');
     let note = { title, description };
     notesData.push(note);
-    props.addNotes(notesData);
+    dispatch(updateNotes(notesData));
   };
 
   const onDeleteNote = (index) => {
     notesData.splice(index, 1);
-    props.addNotes(notesData);
+    dispatch(updateNotes(notesData));
   }
 
   return (
@@ -35,7 +38,7 @@ const Notes = (props) => {
           </Card.Body>
         </Card>
         <div className='content-container'>
-          <NotesList renderNotesList={props.notesList.notes} deleteNote={onDeleteNote} />
+          <NotesList renderNotesList={notesData} deleteNote={onDeleteNote} />
           <div className='content-wrapper'>
             <div style={{textAlign: "right"}}>
               <Button variant="outline-dark" onClick={() => setAddInputView(true)}>+ Add Note</Button>
@@ -50,19 +53,4 @@ const Notes = (props) => {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    notesList: state.notes
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    addNotes: (notes) => dispatch(addNotes(notes))
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Notes)
+export default Notes;
