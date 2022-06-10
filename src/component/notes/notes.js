@@ -7,20 +7,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateNotes } from '../../redux/notes/notesSlice';
 
 const Notes = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [isAddInputView, setAddInputView] = useState(false);
 
   let notesList = useSelector(state => state.notes);
   let notesData = [...notesList.notes];
   const dispatch = useDispatch();
 
-  const handleNotesSubmit = (event) => {
-    event.preventDefault();
-    setTitle('');
-    setDescription('');
-    let note = { title, description };
-    notesData.push(note);
+  const handleNotesSubmit = (addedNotes) => {
+    notesData.push(addedNotes);
     dispatch(updateNotes(notesData));
   };
 
@@ -44,7 +38,7 @@ const Notes = () => {
               <Button variant="outline-dark" onClick={() => setAddInputView(true)}>+ Add Note</Button>
             </div>
             {isAddInputView && (
-              <AddNotesForm title={title} description={description} setTitle={setTitle} setDescription={setDescription} handleNotesSubmit={handleNotesSubmit} />
+              <AddNotesForm handleNotesSubmit={handleNotesSubmit} />
             )}
           </div>
         </div>
